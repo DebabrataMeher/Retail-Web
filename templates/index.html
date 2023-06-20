@@ -1,0 +1,176 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+	<title>Billzen Admin Charts</title>
+</head>
+<body>
+	 {% include 'loader.html' %} 
+	 <script>
+	  window.addEventListener('load', function() {
+		setTimeout(function() {
+		  var loaderOverlay = document.getElementById('loader-overlay');
+		  loaderOverlay.style.display = 'none';
+		}, 500);
+	  });
+	</script>
+	<section id="sidebar">
+		<a href="#" class="brand" >
+			 <i class='bx bx-store'></i>
+			<img src="{% static 'img/MicrosoftTeams-image.png' %}" id="logo"> 
+			<div class="logo-image">
+			 </div>
+		</a>
+		<ul class="side-menu top">
+								<li >
+									<a href="{% url 'stocks' %}" style="font-size: medium;">
+										<i class='bx bxl-product-hunt'></i>
+										<span class="text">Product & Stock</span>
+									</a>
+								</li>
+								<li >
+									<a href="{% url 'purchases' %}" style="font-size: medium;">
+										<i class='bx bxs-purchase-tag'></i>
+										<span class="text">Purchase & Returns</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'sales' %}" style="font-size: medium;">
+										<i class='bx bxl-shopify'></i>
+										<span class="text">	Sales & Returns</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'account' %}" style="font-size: medium;">
+										<i class='bx bxs-user-account'></i>
+										<span class="text">Account & Returns</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" style="font-size: medium;">
+										<i class='bx bxs-coin-stack'></i>
+										<span class="text">Capacity</span>
+									</a>
+								</li>
+		</ul>
+		<ul class="side-menu">
+
+								<li>
+									<a href="{% url 'feedback_submission' %}" style="font-size: medium;">
+										<i class='bx bx-message-edit'></i>
+										<span class="text">Feedback Submission</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'feedback_view' %}" style="font-size: medium;">
+										<i class='bx bx-message-alt-detail'></i>
+										<span class="text">Feedback View Report</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'save_sales_projection' %}" style="font-size: medium;">
+										<i class='bx bx-server' ></i>
+										<span class="text">Sales Kanban</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'state_map' %}" style="font-size: medium;">
+										<i class='bx bxs-map'></i>
+										<span class="text">Sales In Map</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'setting' %}" style="font-size: medium;">
+										<i class='bx bxs-cog' ></i>
+										<span class="text">Settings</span>
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'logout' %}" class="logout" style="font-size: medium;">
+										<i class='bx bxs-log-out-circle' ></i>
+										<span class="text">Logout</span>
+									</a>
+								</li>
+		</ul>
+	</section>
+	<section id="content" style="position: sticky;">
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link" style="text-transform: uppercase;">Dashboard</a>
+			<form action="#">
+			</form>
+			<label class="switch">
+				<span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="#ffd43b"><circle r="5" cy="12" cx="12"></circle><path d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"></path></g></svg></span>
+				<span class="moon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg></span>   
+				<input type="checkbox" class="input" id="switch-mode" >
+				<span class="slider"></span>
+			  </label>
+			<a href="#" class="notification">
+				<i class='bx bxs-bell' ></i>
+				<span class="num">8</span>
+			</a>
+			<a href="#" class="profile">
+				<img src="{% static 'img/Surya.png' %}">
+			</a>
+		</nav>
+	</section>
+		<script>
+			const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+			function getClassToRemove() {
+				return 'active';
+			  }
+			  allSideMenu.forEach(item => {
+				const li = item.parentElement;
+				item.addEventListener('click', function () {
+				  allSideMenu.forEach(otherItem => {
+					const classToRemove = getClassToRemove();
+					otherItem.parentElement.classList.remove('active');
+				  });
+				  li.classList.add('active');
+				});
+			  });
+const searchButton = document.querySelector('#content nav form .form-input button');
+const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
+const searchForm = document.querySelector('#content nav form');
+searchButton.addEventListener('click', function (e) {
+	if(window.innerWidth < 576) {
+		e.preventDefault();
+		searchForm.classList.toggle('show');
+		if(searchForm.classList.contains('show')) {
+			searchButtonIcon.classList.replace('bx-search', 'bx-x');
+		} else {
+			searchButtonIcon.classList.replace('bx-x', 'bx-search');
+		}
+	}
+})
+
+if(window.innerWidth < 768) {
+	sidebar.classList.add('hide');
+} else if(window.innerWidth > 576) {
+	searchButtonIcon.classList.replace('bx-x', 'bx-search');
+	searchForm.classList.remove('show');
+}
+
+window.addEventListener('resize', function () {
+	if(this.innerWidth > 576) {
+		searchButtonIcon.classList.replace('bx-x', 'bx-search');
+		searchForm.classList.remove('show');
+	}
+})
+
+const switchMode = document.getElementById('switch-mode');
+switchMode.addEventListener('change', function () {
+	if(this.checked) {
+		document.body.classList.add('dark');
+	} else {
+		document.body.classList.remove('dark');
+	}
+})
+		</script>
+		  {% block content %}{% endblock %}
+</body>
+</html>

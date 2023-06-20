@@ -1,0 +1,228 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <style>
+    body {
+      background-color: #ffffff;
+      #padding: 20px;
+      font-family: 'Segoe UI';
+    }
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #f8f9fa;
+      #background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333333;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      color: #333333;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .form-group textarea {
+      height: 100px;
+    }
+    .form-group input[type="checkbox"] {
+      display: inline-block;
+      width: auto;
+      margin-top: 7px;
+    }
+    .form-group button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-family: 'Segoe UI';
+      transition: background-color 0.3s ease;
+    }
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+    .form-group button:disabled {
+      background-color: #b8b8b8;
+      cursor: not-allowed;
+    }
+  </style>
+  <style>
+    .popup {
+      margin-left: 520px;
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
+    nav {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+    }
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    nav li {
+      margin-right: 10px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+  <style>
+    .success-message {
+      display: none;
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#popupButton').click(function() {
+        $('.popup').fadeIn();
+        $('.overlay').fadeIn();
+      });
+      $('.overlay, .closeButton').click(function() {
+        $('.popup').fadeOut();
+        $('.overlay').fadeOut();
+      });
+    });
+  </script>
+
+
+  <div class="form-container" style=" margin-right: 363px;   margin-top: 10px;">
+    <h2>Feedback Submission</h2>
+    <form method="POST" action="{% url 'feedback_submission' %}">
+      {% csrf_token %}
+      <div class="form-group" style="width: 45%;    margin-left: 55%;">
+        <label for="date_of_return">Date of Return:</label>
+        <input type="date" id="date_of_return" name="date_of_return" required>
+      </div>
+      <div class="form-group" style="width: 45%;margin-top: -90px;">
+        <label for="market_place">Market Place:</label>
+        <select id="market_place" name="market_place" required>  
+          <option  value="Amazon">Amazon</option>
+          <option  value="Flipkart">Flipkart</option>
+          <option  value="Meesho">Meesho</option>
+          <option  value="Snapdeal">Snapdeal</option>
+          <option  value="Mitra">Mitra</option>
+          <option  value="Ajio">Ajio</option>
+          <option  value="LimeRoad">LimeRoad</option>
+          <option  value="Bewakoof">Bewakoof</option>
+      </select>
+      </div>
+      <div class="form-group" style="width: 45%;    margin-left: 55%;">
+        <label for="return_item_id">Return Item ID:</label>
+        <input type="text" id="return_item_id" name="return_item_id" required>
+      </div>
+      <div class="form-group" style="width: 45%;margin-top: -90px;">
+        <label for="order_reference">Order Reference:</label>
+        <input type="text" id="order_reference" name="order_reference" required>
+      </div>
+      <div class="form-group" >
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" required>
+      </div>
+      <div class="form-group" >
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+      </div>
+      <div><button id="popupButton" class="popupButton" style="margin-bottom: 12px;margin-top: 35px;width: 22px;height: 22px;">+</button></div>
+      <div class="form-group" style="    width: 100%;    margin-top: -68px;margin-left: 31px;">
+        <label for="return_id" style="margin-top: -38px;margin-left: -31px;">Return Reason:</label>
+        <select id="return_id" name="return_id" style="width: 93%; ">
+          {% for return_reas in return_reas %}
+          <option v1="{{ return_reas.0 }}" value="{{ return_reas.0 }}">{{ return_reas.1 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="customer_details">Customer Details:</label>
+        <textarea id="customer_details" name="customer_details" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="reason_description">Reason Description:</label>
+        <textarea id="reason_description" name="reason_description" required></textarea>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="submit" name="button1" class="button1" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;font-family: 'Segoe UI';">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="overlay"></div>
+  <div class="popup">
+    <form method="POST" action="{% url 'feedback_submission' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="return_reason">Return Reason:</label>
+        <textarea id="return_reason" name="return_reason" required style="width: 100%; height: 100px;"></textarea>
+      </div>
+      <div class="form-group" style="text-align: right;">
+        <button type="submit" name="button2" class="button2" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Submit</button>
+        <button class="closeButton" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
+
+  <script>
+    {% if success_message %}
+    document.addEventListener('DOMContentLoaded', function() {
+       Swal.fire({
+         toast: true,
+         position: 'top-right',
+         background: 'FFFFFF',
+         showConfirmButton: false,
+         icon: 'success',
+         timer: 4000,
+         title: '{{success_message}} '
+        })
+      });
+    {% endif %}    
+  </script>
+  {% endblock %}

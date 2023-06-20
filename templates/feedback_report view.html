@@ -1,0 +1,663 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #chartContainer {
+      width: 1244px;
+    margin: 15px;
+    margin-top: 32px;
+    top: 14px;
+    margin-left: 278px;
+    #background-color: aqua;
+    height: 318px;
+    display: flex;
+    justify-content: space-between;
+    }
+    #chartButtons{
+      width: 25px;
+      margin-top: -298px;
+      margin-left: 320px;
+      height: 50px;
+    }
+    #chartSection {
+      width: 318px;;
+      background-color: antiquewhite;
+      margin-left: 17px;
+      height: 98%;
+    }
+    #tableSection {
+      width: 318px;
+      height: 311px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    thead{
+      position: sticky;
+      top: 0;
+    }
+    button {
+      margin-top: 2px;
+      color:blue;
+      background-color: #f2f2f2;
+      border-radius: 3px;
+    }
+    #feedbacktable{
+      width: 1224px;
+      margin-left: 287px;
+      margin: 5px;
+      background-color: #fff;
+      box-shadow: 3px 3px 18px #bebebe,-2px -2px 6px #ffffff;
+      border-radius: 5px;
+      margin-left: 71px;
+    }
+    #tableSection {
+      margin: 5px;
+      background-color: #fff;
+      box-shadow: 3px 3px 18px #bebebe;
+      -2px -2px 6px #ffffff;
+      border-radius: 5px;
+      margin-right: 71px;
+      overflow-x: auto;
+      position: relative;
+    } 
+    .table-heading {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background-color: #f2f2f2;
+    }
+  #open-popup {
+    position: fixed;
+    top: 71px;
+    right: 34px;
+    z-index: 9999;
+    background-color: #2e3dff94;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  #popup {
+    position: fixed;
+    top: 0;
+    right: -360px;
+    z-index: 9999;
+    width: 360px;
+    height: 100%;
+    background-color: var(--light);
+    padding: 10px;
+    transition: 0.3s;
+    overflow-y: auto;
+  }
+  #close-slider {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  form {
+    margin-top: 20px;
+  }
+  label {
+    display: block;
+    margin-top: 12px;
+      margin-bottom: 7px;
+      margin-left: 54px;
+  }
+  select,
+  input[type="text"],
+  input[type="date"],
+  input[type="document"],
+  input[type="barcode"] {
+    width: 70%;
+    padding: 5px;
+    margin-left: 54px;
+    border: 1px solid #ccc;
+  }
+  button[type="submit"],
+  button#cancel-slider {
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button#cancel-slider {
+    background-color: #f44336;
+    margin-left: 10px;
+  }
+  button[type="submit"]:hover,
+  button#cancel-slider:hover {
+    opacity: 0.8;
+  }
+  .pulse-danger {
+    display: block;
+    position: absolute;
+    top: 0.7rem;
+    right: 0.4rem;
+    width: 7px;
+    height: 7px;
+    animation: pulse 1s infinite;
+    border-radius: 50%;
+    background: #ff5959;
+    cursor: pointer;
+    box-shadow: 0 0 0 rgba(34,192,60,.9);
+    -webkit-animation: pulse-danger 2s infinite;
+    animation: pulse-danger 2s infinite;
+    -webkit-animation-duration: .9s;
+    animation-duration: .9s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes blink {
+  0% {
+    visibility: visible;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+.pulse-danger {
+  animation: pulse 1s infinite, blink 1s infinite;
+}
+.report-container {
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  padding: 13px;
+  margin-bottom: 20px;
+  margin-right: 66px;
+  margin-top: 5px;
+}
+.report-title {
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.projection-title {
+  color: #4CAF50;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.data-values p {
+  margin-bottom: 5px;
+}
+.data-values strong {
+  color: #333;
+}
+  </style>
+
+
+  <div class="report-container" style="height: 68px; width: 1194px;margin-left: 304px;">
+    <div class="data-values" style="width: 30%;height: 42px; color:#00B5E2" >
+    <h2 style="color:#00B5E2;padding: 0px;">Feedback View Reports</h2>
+    </div>
+    <div class="data-values" style="height: 49px;width: 35%; margin-left: 37%;margin-top: -42px;">
+      <h2> <strong style="color:blue;">Market Place:</strong> {{market_place}}</h2>
+    </div>
+    <div class="data-values" style="width: 30%; margin-left: 73%; margin-top: -54px;">
+      <p><strong>From Date:</strong> {{from_date}}</p>
+      <p><strong>To Date:</strong> {{to_date}}</p>
+    </div>
+  </div>
+
+  <button id="open-popup" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Filter<i style="color: white;" class='bx bx-filter-alt'></i><span class="pulse-danger"></span></button>
+  <div class="overlay"></div>
+  <div id="popup" class="popup">
+    <h2 style="text-align: center;">Filter the Records </h2>
+    <button id="close-slider">&times;</button>
+    <form method="post">
+      <form method="post">
+        {% csrf_token %}
+        <label for="date-input">From Date:</label>
+        <input type="date" id="date-input" name="date" style="margin-right: 10px;">
+        <label for="date-input1">To Date:</label>
+        <input type="date" id="date-input1" name="date1" style="margin-right: 10px;">
+          <label for="market_place">Market Place:</label>
+          <select id="market_place" name="market_place" required>
+            <option  value="All">All</option>   
+            <option  value="Amazon">Amazon</option>
+            <option  value="Flipkart">Flipkart</option>
+            <option  value="Meesho">Meesho</option>
+            <option  value="Snapdeal">Snapdeal</option>
+            <option  value="Myntra">Myntra</option>
+            <option  value="Ajio">Ajio</option>
+            <option  value="LimeRoad">LimeRoad</option>
+            <option  value="Bewakoof">Bewakoof</option>
+        </select>
+<script>
+  const fromDateInput = document.getElementById('date-input');
+  const toDateInput = document.getElementById('date-input1');
+  const marketPlaceSelect = document.getElementById('market_place');
+  const currentDate = new Date().toISOString().split('T')[0];
+  const threeMonthsBefore = new Date();
+  threeMonthsBefore.setMonth(threeMonthsBefore.getMonth() - 3);
+  const defaultFromDate = threeMonthsBefore.toISOString().split('T')[0];
+  fromDateInput.value = defaultFromDate;
+  toDateInput.value=currentDate;
+  window.addEventListener('load', function() {
+      const selectedFromDate = sessionStorage.getItem('selectedFromDate');
+      const selectedToDate = sessionStorage.getItem('selectedToDate');
+      const selectedMarketPlace = sessionStorage.getItem('selectedMarketPlace');
+      if (selectedFromDate) fromDateInput.value = selectedFromDate;
+      if (selectedToDate) toDateInput.value = selectedToDate;
+      if (selectedMarketPlace) marketPlaceSelect.value = selectedMarketPlace;
+  });
+  document.querySelector('form').addEventListener('submit', function(event) {
+      sessionStorage.setItem('selectedFromDate', fromDateInput.value);
+      sessionStorage.setItem('selectedToDate', toDateInput.value);
+      sessionStorage.setItem('selectedMarketPlace', marketPlaceSelect.value);
+  });
+</script>
+        <button type="submit" style="margin-left: 116px; margin-top: 21px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;font-family: 'Segoe UI';width: 81.49px;height: 36px;">Submit</button>
+        <button id="cancel-slider">Cancel</button>
+      </form>
+  </div>
+  <script>
+    document.getElementById("open-popup").addEventListener("click", function() {
+      document.getElementById("popup").style.right = "0";
+    });
+  
+    document.getElementById("close-slider").addEventListener("click", function() {
+      document.getElementById("popup").style.right = "-360px";
+    });
+  
+    document.getElementById("cancel-slider").addEventListener("click", function(event) {
+      event.preventDefault();
+      document.getElementById("popup").style.right = "-360px";
+    });
+  </script>
+
+  <h3 style="margin-top: 0px;margin-bottom: -29px;margin-left: 366px;color:#945353 ">Returns By MarketPlace </h3>
+    <h3 style="margin-top: 0px;margin-bottom: -29px;margin-left: 1206px;color:#945353"> Count Of Return By Products</h3>
+  <div id="chartContainer" >
+    <div id="chartSection" style="margin: 5px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+          -2px -2px 6px #ffffff;border-radius: 5px; margin-left: 28px;">
+            <canvas id="myChart1" style="height: 90%; width: 90%;margin-left: 4px;"></canvas>
+            </div>
+             <div id="tableSection" style="margin: 5px; background-color: #fff; box-shadow: 3px 3px 18px #bebebe;
+        -2px -2px 6px #ffffff; border-radius: 5px; margin-right: 377px; overflow-x: auto;    margin-right: -62px;">
+          <div class="table-heading">
+            <h2 style="text-align: center; color: #945353;height: 41px;">Returns By MarketPlace</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Market Place</th>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Number of Returns</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for Countmktplc in Countmktplc %}
+              <tr>
+                <td>{{ Countmktplc.0 }}</td>
+                <td>{{ Countmktplc.1 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+            <div id="chartSection" style="margin: 5px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+          -2px -2px 6px #ffffff;border-radius: 5px; margin-left: 71px;margin-right: 28px;">
+          <canvas id="myChart2" style="height: 90%; width: 90%;margin-left: 4px;"></canvas>
+        </div>
+          </div>
+    </div>
+
+<h3 style="    margin-left: 371px; width: 235px;    margin-top: 20px;   margin-bottom: -29px; color:#945353">Return Reason Reports</h3>
+<h3 style="    margin-left: 1172px; width: 280px;    margin-top: 20px;   margin-bottom: -30px; color:#945353"></h3>
+  <div id="chartContainer" >
+          <div id="chartSection" style="margin: 5px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+          -2px -2px 6px #ffffff;border-radius: 5px; margin-left: 28px;">
+            <canvas id="myChart" style="height: 90%; width: 90%;margin-left: 4px;"></canvas>
+            </div>
+        <div id="tableSection" style="margin: 5px; background-color: #fff; box-shadow: 3px 3px 18px #bebebe;
+        -2px -2px 6px #ffffff; border-radius: 5px; margin-right: 377px; overflow-x: auto;    margin-right: 0px;">
+          <div class="table-heading">
+            <h2 style="text-align: center; color: #945353;height: 41px;">Return Reason Report</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Return Reason</th>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Number of Reasons</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for feedback in feedbackView2 %}
+              <tr>
+                <td>{{ feedback.0 }}</td>
+                <td>{{ feedback.1 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div id="tableSection" style="margin: 5px; background-color: #fff; box-shadow: 3px 3px 18px #bebebe;
+        -2px -2px 6px #ffffff; border-radius: 5px; margin-right: 377px; overflow-x: auto;     margin-right: 28px;">
+          <div class="table-heading">
+            <h2 style="text-align: center; color: #945353;height: 41px;">Returns By Products</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Product Name</th>
+                <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Number of Returns</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ReturnByProducts1 in ReturnByProducts1 %}
+              <tr>
+                <td>{{ ReturnByProducts1.0 }}</td>
+                <td>{{ ReturnByProducts1.1 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+  </div>
+   <div id="feedbacktable" style="margin-left: 287px; max-height: 570px;    overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Date of Return</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Market Place</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Return Item ID</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Order Reference</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Product Name</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Quantity</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Return Reason</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Customer Details</th>
+          <th style="position: sticky; top: 40px; background-color: #f2f2f2; z-index: 2;">Reason Description</th>
+        </tr>
+        <h2 style="text-align: center; color: #945353; position: sticky; top: 0; background-color: #fff; z-index: 1;    height: 41px;">
+          Return Feedback View
+        </h2>
+      </thead>
+      <tbody>
+        {% for row in feedbackTbl %}
+        <tr>
+          <td>{{ row.0 }}</td>
+          <td>{{ row.1 }}</td>
+          <td>{{ row.2 }}</td>
+          <td>{{ row.3 }}</td>
+          <td>{{ row.4 }}</td>
+          <td>{{ row.5 }}</td>
+          <td>{{ row.6 }}</td>
+          <td>{{ row.7 }}</td>
+          <td>{{ row.8 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>  
+</div> 
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-labels"></script>
+<script>
+    var feedbackView = JSON.parse('{{ feedbackView|safe }}');
+    var chartType1 = 'pie';
+    var myChart;
+    function renderChart() {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var labels = feedbackView.map(function(item) {
+        return item[0];
+      });
+      var values = feedbackView.map(function(item) {
+        return item[1];
+      });
+      var chartConfig = {
+        type: chartType1,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Number of Reasons',
+            data: values,
+            backgroundColor: [
+            ' #00C853 ',
+            '#0091EA ',
+            '#AA00FF ',
+            ' #00BFA5 ',
+            ' #304FFE ',
+            '#00E676 ',
+            '#6200EA ',
+            '#00C853 ',
+            ' #1DE9B6 ',
+            '#2962FF '
+            ],
+            borderColor: [
+            ' #00008B',
+            '#006400',
+            '#808000',
+            ' #FF69B4',
+            ' #9370DB',
+            '#FF8C00',
+            '#A9A9A9',
+            '#8B0000',
+            ' #008080',
+            '#4B0082'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            labels: {
+              render: 'percentage',
+              precision: 1,
+              fontColor: '#000',
+              fontStyle: 'bold',
+              fontSize: 12,
+              arc: true
+            }
+          },
+          legend: {display: false},
+          title: {
+            display: true,
+            text: "Split Payments Report"
+          }
+        }
+      };
+      if (myChart) {
+        myChart.destroy();
+      }
+      myChart = new Chart(ctx, chartConfig);
+    }
+    function changeChartType(type) {
+      chartType = type;
+      renderChart();
+    }
+    renderChart();
+</script>
+
+<script>
+    var feedbackView = JSON.parse('{{ Countmktplc1|safe }}');
+    var chartType = 'pie';
+    var myChart1;
+    function renderChart() {
+      var ctx = document.getElementById('myChart1').getContext('2d');
+      var labels = feedbackView.map(function(item) {
+        return item[0];
+      });
+      var values = feedbackView.map(function(item) {
+        return item[1];
+      });
+      var chartConfig = {
+        type: chartType,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Number of Reasons',
+            data: values,
+            backgroundColor: [
+            ' #00C853 ',
+            '#0091EA ',
+            '#AA00FF ',
+            ' #00BFA5 ',
+            ' #304FFE ',
+            '#00E676 ',
+            '#6200EA ',
+            '#00C853 ',
+            ' #1DE9B6 ',
+            '#2962FF '
+            ],
+            borderColor: [
+            ' #00008B',
+            '#006400',
+            '#808000',
+            ' #FF69B4',
+            ' #9370DB',
+            '#FF8C00',
+            '#A9A9A9',
+            '#8B0000',
+            ' #008080',
+            '#4B0082'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: "Return Reasons by Market Place"
+          }
+        }
+      };
+      if (myChart1) {
+        myChart1.destroy();
+      }
+      myChart1 = new Chart(ctx, chartConfig);
+    }
+    function changeChartType(type) {
+      chartType = type;
+      renderChart();
+    }
+    renderChart();
+</script>
+
+  
+
+
+  
+
+<script>
+    var feedbackView = JSON.parse('{{ ReturnByProducts|safe }}');
+    var chartType = 'bar';
+    var myChart2;
+    function renderChart() {
+      var ctx = document.getElementById('myChart2').getContext('2d');
+      var labels = feedbackView.map(function(item) {
+        return item[0];
+      });
+      var values = feedbackView.map(function(item) {
+        return item[1];
+      });
+      var chartConfig = {
+        type: chartType,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Number of Reasons',
+            data: values,
+            backgroundColor: [
+            ' #00C853 ',
+            '#0091EA ',
+            '#AA00FF ',
+            ' #00BFA5 ',
+            ' #304FFE ',
+            '#00E676 ',
+            '#6200EA ',
+            '#00C853 ',
+            ' #1DE9B6 ',
+            '#2962FF '
+            ],
+            borderColor: [
+            ' #00008B',
+            '#006400',
+            '#808000',
+            ' #FF69B4',
+            ' #9370DB',
+            '#FF8C00',
+            '#A9A9A9',
+            '#8B0000',
+            ' #008080',
+            '#4B0082'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: "Return Reasons by Market Place"
+          }
+        }
+      };
+      if (myChart2) {
+        myChart2.destroy();
+      }
+      myChart2 = new Chart(ctx, chartConfig);
+    }
+
+    function changeChartType(type) {
+      chartType = type;
+      renderChart();
+    }
+    renderChart();
+</script>
+
+  {% endblock %}  

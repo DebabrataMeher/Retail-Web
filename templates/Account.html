@@ -1,0 +1,398 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+<style>
+
+  #open-popup {
+    position: fixed;
+    top: 61px;
+    right: 34px;
+    z-index: 9999;
+    background-color: #2e3dff94;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+
+  #popup {
+    position: fixed;
+    top: 0;
+    right: -360px;
+    z-index: 9999;
+    width: 360px;
+    height: 100%;
+    background-color: var(--light);
+    padding: 10px;
+    transition: 0.3s;
+    overflow-y: auto;
+  }
+
+ 
+  #close-slider {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+ 
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    display: block;
+    margin-top: 12px;
+      margin-bottom: 7px;
+      margin-left: 54px;
+  }
+
+  select,
+  input[type="text"],
+  input[type="date"],
+  input[type="document"],
+  input[type="barcode"] {
+    width: 70%;
+    padding: 5px;
+    margin-left: 54px;
+    border: 1px solid #ccc;
+  }
+
+  button[type="submit"],
+  button#cancel-slider {
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button#cancel-slider {
+    background-color: #f44336;
+    margin-left: 10px;
+  }
+
+  button[type="submit"]:hover,
+  button#cancel-slider:hover {
+    opacity: 0.8;
+  }
+  .pulse-danger {
+    display: block;
+    position: absolute;
+    top: 0.7rem;
+    right: 0.4rem;
+    width: 7px;
+    height: 7px;
+    animation: pulse 1s infinite;
+    border-radius: 50%;
+    background: #ff5959;
+    cursor: pointer;
+    box-shadow: 0 0 0 rgba(34,192,60,.9);
+    -webkit-animation: pulse-danger 2s infinite;
+    animation: pulse-danger 2s infinite;
+    -webkit-animation-duration: .9s;
+    animation-duration: .9s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0% {
+    visibility: visible;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+.pulse-danger {
+  animation: pulse 1s infinite, blink 1s infinite;
+}
+</style>
+
+
+<script>
+  $(document).ready(function() {
+    $('#open-popup').click(function() {
+      $('.popup').fadeIn();
+      $('.overlay').fadeIn();
+    });
+    $('.overlay, .cancel-slider').click(function() {
+      $('.popup').fadeOut();
+      $('.overlay').fadeOut();
+    });
+  });
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function()
+        {
+            var $select1=$('#my_input'),
+                $select2=$('#my_input1'),
+                $select3=$('#my_input2'),
+                $options=$select2.find('option');
+                $options2=$select3.find('option');
+                $select1.on('change',function()
+                {
+                    $select2.html($options.filter('[v1="'+this.value+'"]'));
+                    $select3.html($options2.filter('[v2="'+this.value+'"]'));
+                }).trigger('change');
+        });
+    
+      </script> 
+        <h2 style="margin-bottom: -37px;margin-left: 351px;    margin-top: 2px;">Account & Returns</h2>
+      <button id="open-popup" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Filter<i style="color: white;" class='bx bx-filter-alt'></i><span class="pulse-danger"></span></button>
+      <div class="overlay"></div>
+      <div id="popup" class="popup">
+        <h2 style="text-align: center;">Filter the Records</h2>
+        <button id="close-slider">&times;</button>
+        <form method="post">
+          {% csrf_token %}
+          <label for="my_input">Company Name:</label>
+              <select id="my_input" name="my_input">
+                {% for companie in companies %}
+                <option v1="{{ companie.0 }}" value="{{ companie.0 }}">{{ companie.1 }}</option>
+                {% endfor %}
+              </select>
+          <label for="my_input1">Outlet Name:</label>
+              <select id="my_input1" name="my_input1">
+                {% for outlet in outlets %}
+                <option v1="{{ outlet.2 }}" value="{{ outlet.0 }}">{{ outlet.1 }}</option>
+                {% endfor %}
+              </select> 
+          <label for="my_input2">Account Type:</label>
+              <select id="my_input2" name="my_input2">
+                  {% for Account in Account %}
+                      <option v2="{{ Account.2 }}" value="{{ Account.0 }}">{{ Account.1 }}</option>
+                  {% endfor %}
+              </select>
+          <label for="my_input3">Payment Type:</label>
+              <select id="my_input3" name="my_input3">
+              
+              <option  value="all">all</option>
+              <option  value="is_supplier_payment">is_supplier_payment</option>
+              <option  value="is_recieved_from_outlet">is_recieved_from_outlet</option>
+              <option  value="is_recieved_from_credit_customer">is_recieved_from_credit_customer</option>
+              <option  value="is_expenditure">is_expenditure</option>
+              <option  value="is_payment_transfer">is_payment_transfer</option>
+              <option  value="is_manual_adjustment">is_manual_adjustment</option>
+              <option  value="is_withdraw">is_withdraw</option>
+         
+          </select>
+          <label for="document-input">Document:</label>
+          <input type="document" id="document-input" name="document_no">
+          <label for="date-input">From Date:</label>
+          <input type="date" id="date-input" name="date">
+          <label for="date-input">To Date:</label>
+          <input type="date" id="date-input1" name="date1">
+          <button type="submit" style="  margin-left: 114px;">Submit</button>
+          <button id="cancel-slider">Cancel</button>
+        </form>
+      </div>
+      
+      <script>
+        document.getElementById("open-popup").addEventListener("click", function() {
+          document.getElementById("popup").style.right = "0";
+        });
+      
+        document.getElementById("close-slider").addEventListener("click", function() {
+          document.getElementById("popup").style.right = "-360px";
+        });
+      
+        document.getElementById("cancel-slider").addEventListener("click", function(event) {
+          event.preventDefault();
+          document.getElementById("popup").style.right = "-360px";
+        });
+      </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+
+
+<div class="container" style="margin-top: 49px;">
+  <div class="row" style="width: 1244px; top: 14px; height: 318px; background-color: #fff; margin: 15px;margin-left: 99px; ">
+      <div class="col" style="margin: 15px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+      -2px -2px 6px #ffffff;border-radius: 5px;">
+        <canvas id="myChart"></canvas>
+      </div>
+      <div class="col" style="margin: 15px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+      -2px -2px 6px #ffffff;border-radius: 5px;">
+        <canvas id="myChart1" ></canvas>
+      </div>
+  </div>		
+  <div class="row" style="width: 1244px; top: 14px; height: 318px; background-color: #fff; margin: 15px;margin-left: 99px;">
+      <div class="col" style="margin: 15px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+      -2px -2px 6px #ffffff;border-radius: 5px;">
+        <canvas id="myChart2" ></canvas>
+      </div>
+      <div class="col" style="margin: 15px; background-color: #fff;box-shadow: 3px 3px 18px #bebebe,
+      -2px -2px 6px #ffffff;border-radius: 5px;">
+        <canvas id="myChart3" ></canvas>
+      </div>
+      
+  </div>
+ 
+
+
+
+  </div>
+
+
+<script>
+  
+var barColors = ["red", "green","blue","orange","brown","yellow","indigo","violet","purple","pink","silver","gold","beige","gray","black","white"];
+
+new Chart("myChart", {
+type: "horizontalBar",
+data: {
+labels: [{% for d in AccountBalance %}"{{ d.0 }}",{% endfor %}],
+datasets: [{
+backgroundColor: barColors,
+data: [{% for d in AccountBalance %}{{ d.1 }},{% endfor %}]
+}]
+},
+options: {
+legend: {display: false},
+title: {
+display: true,
+text: "Account Balace"
+},
+scales: {
+    xAxes: [{
+      type: 'linear',
+      display: true,
+      scaleLabel: {
+        display: true,
+        labelString: 'Balance'
+      }
+    }],
+    yAxes: [{
+      type: 'category',
+      display: true,
+      scaleLabel: {
+        display: true,
+        labelString: 'Account Name'
+      }
+    }]
+  }
+}
+});
+</script>
+
+<script>
+  
+    var barColors = ["red", "green","blue","orange","brown","yellow","indigo","violet","purple","pink","silver","gold","beige","gray","black","white"];
+    
+    new Chart("myChart1", {
+    type: "horizontalBar",
+    data: {
+    labels: [{% for d in AccountTransactions %}"{{ d.0 }}",{% endfor %}],
+    datasets: [{
+        backgroundColor: barColors,
+    data: [{% for d in AccountTransactions%}{{ d.1 }},{% endfor %}]
+}]
+},
+    options: {
+    legend: {display: false},
+    title: {
+        display: true,
+        text: "Account Transactions Report"
+    },
+    scales: {
+        xAxes: [{
+          type: 'linear', 
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Balance Amount'
+          }
+        }],
+        yAxes: [{
+          type: 'category', 
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Documents No '
+          }
+        }]
+      }
+}
+});
+</script>
+
+<script>
+var barColors = ["red", "green","blue","orange","brown","yellow","indigo","violet","purple","pink","silver","gold","beige","gray","black","white"];
+new Chart("myChart2", {
+type: "horizontalBar",
+data: {
+labels: [{% for d in SplitPayments %}"{{ d.0 }}",{% endfor %}],
+datasets: [{
+backgroundColor: barColors,
+data: [{% for d in SplitPayments%}{{ d.1 }},{% endfor %}]
+}]
+},
+options: {
+legend: {display: false},
+title: {
+display: true,
+text: "Split Payments Report"
+},
+scales: {
+    xAxes: [{
+      type: 'linear',
+      display: true,
+      scaleLabel: {
+        display: true,
+        labelString: 'Amount'
+      }
+    }],
+    yAxes: [{
+      type: 'category', 
+      display: true,
+      scaleLabel: {
+        display: true,
+        labelString: 'Payment Mode'
+      }
+    }]
+  }
+}
+});
+</script>
+
+
+{% endblock %}
